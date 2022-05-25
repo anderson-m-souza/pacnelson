@@ -14,23 +14,27 @@ void copy_map(MAP *map_dest, MAP *map_orig) {
   }
 }
 
-void get_position(MAP *m, POSITION *pos, char item) {
+int get_position(MAP *m, POSITION *pos, char item) {
   for (int i = 0; i < m->rows; i++) {
     for (int j = 0; j < m->cols; j++) {
       if (m->matrix[i][j] == item) {
         pos->x = i;
         pos->y = j;
-        return;
+        return 1;
       }
     }
   }
+  return 0;
 }
 
 int valid_pos(MAP *m, char x, char y) {
-  return (x < m->rows
-       && x > 0
-       && y < m->cols
-       && y > 0);
+  return !is_wall(m, x, y)
+    && empty_pos(m, x, y);
+}
+
+int is_wall(MAP *m, char x, char y) {
+  return m->matrix[x][y] == VERTICAL_WALL
+      || m->matrix[x][y] == HORIZONTAL_WALL;
 }
 
 int empty_pos(MAP *m, char x, char y) {
@@ -38,7 +42,7 @@ int empty_pos(MAP *m, char x, char y) {
 }
 
 void change_pos(MAP *m, int x, int y,
-                int new_x, int new_y, char item) {
+    int new_x, int new_y, char item) {
   m->matrix[x][y] = EMPTY;
   m->matrix[new_x][new_y] = item;
 }

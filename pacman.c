@@ -22,8 +22,7 @@ int new_pos(int x, int y,
   for (int i = 0; i < 10; i++) {
     int random = rand() % 4;
     
-    if (valid_pos(&m, options[random][0], options[random][1])
-        && empty_pos(&m, options[random][0], options[random][1])) {
+    if (valid_pos(&m, options[random][0], options[random][1])) {
       *x_dest = options[random][0];
       *y_dest = options[random][1];
 
@@ -59,7 +58,9 @@ void ghosts() {
 }
 
 int game_over() {
-  return 0;
+  POSITION pos;
+  int is_alive = get_position(&m, &pos, HERO);
+  return !is_alive;
 }
 
 void move() {
@@ -91,9 +92,6 @@ void move() {
   }
 
   if (!valid_pos(&m, new_x, new_y))
-    return;
-
-  if (!empty_pos(&m, new_x, new_y))
     return;
 
   change_pos(&m, pos.x, pos.y, new_x, new_y, HERO);
