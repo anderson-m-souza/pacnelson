@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include "pacman.h"
 #include "map.h"
+#include "ui.h"
 
 MAP m;
+MAP m_food;
 POSITION pos;
 int has_bomb = 0;
 
@@ -20,7 +22,7 @@ void ghosts() {
         int can_move = new_pos(&m, i, j, &x_dest, &y_dest);
 
         if (can_move) {
-          change_pos(&m, i, j, x_dest, y_dest, GHOST);
+          change_pos(&m, &m_food, i, j, x_dest, y_dest, GHOST);
         }
       }
     }
@@ -68,7 +70,7 @@ void move(char command) {
     has_bomb = 1;
   }
 
-  change_pos(&m, pos.x, pos.y, new_x, new_y, HERO);
+  change_pos(&m, &m_food, pos.x, pos.y, new_x, new_y, HERO);
   pos.x = new_x;
   pos.y = new_y;
 }
@@ -90,28 +92,31 @@ void explode_helper(int x, int y,
       || is_wall(&m, new_x, new_y)) {
     return;
   }
-
-  m.matrix[new_x][new_y] = EMPTY;
+  
+  m.matrix[new_x][new_y] = m_food.matrix[new_x][new_y];
   explode_helper(new_x, new_y, x_sum, y_sum, radius - 1);
 }
 
+void exec_commands() {
+  char command;
+  scanf(" %c", &command);
+  if (has_bomb && command == EXPLODE) {
+    explode();
+    has_bomb = 0;
+  } else {
+    move(command);
+  }
+}
+
 int main() {
-  read_map(&m);
+  read_map(&m, 1);
+  read_map(&m_food, 0);
   get_position(&m, &pos, HERO);
 
   do {
     print_map(&m);
-    printf("has_bomb == %d\n", has_bomb);
-
-    char command;
-    scanf(" %c", &command);
-    if (has_bomb && command == EXPLODE) {
-      explode();
-      has_bomb = 0;
-    } else {
-      move(command);
-    }
-
+    printf("Bomb: %d\n", has_bomb);
+    exec_commands();
     ghosts();
   } while (!game_over());
 

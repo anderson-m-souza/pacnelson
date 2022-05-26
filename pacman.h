@@ -1,3 +1,6 @@
+#ifndef _PACMAN_H_
+#define _PACMAN_H_
+
 #define UP 'w'
 #define UP_VIM 'k'
 #define DOWN 's'
@@ -14,3 +17,5 @@ void ghosts();
 void explode();
 void explode_helper(int x, int y,
     int x_sum, int y_sum, int radius);
+
+#endif

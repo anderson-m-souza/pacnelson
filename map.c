@@ -46,9 +46,14 @@ int empty_pos(MAP *m, char x, char y) {
   return m->matrix[x][y] == EMPTY;
 }
 
-void change_pos(MAP *m, int x, int y,
+void change_pos(MAP *m, MAP *m_food, int x, int y,
     int new_x, int new_y, char item) {
-  m->matrix[x][y] = EMPTY;
+  if (item == HERO) {
+    m_food->matrix[x][y] = EMPTY;
+    m->matrix[x][y] = EMPTY;
+  } else {
+    m->matrix[x][y] = m_food->matrix[x][y];
+  }
   m->matrix[new_x][new_y] = item;
 }
 
@@ -66,7 +71,7 @@ void free_map(MAP *m) {
   free(m->matrix);
 }
 
-void read_map(MAP *m) {
+void read_map(MAP *m, int ghosts) {
   char map_file[20] = MAP_FILENAME;
 
   FILE *f;
@@ -77,20 +82,24 @@ void read_map(MAP *m) {
   }
 
   fscanf(f, "%d %d", &m->rows, &m->cols);
-  printf("rows: %d\ncols: %d\n", m->rows, m->cols);
 
   map_malloc(m);
 
   for (int i = 0; i < m->rows; i++) {
     fscanf(f, "%s", m->matrix[i]);
-  }
-  fclose(f);
-}
 
-void print_map(MAP *m) {
-  for (int i = 0; i < m->rows; i++) {
-    printf("%s\n", m->matrix[i]);
+    if (!ghosts) {
+      for (int j = 0; m->matrix[i][j] != '\0';j++) {
+        if (m->matrix[i][j] == GHOST) {
+          m->matrix[i][j] = EMPTY;
+        } else {
+          continue;
+        }
+      }
+    }
   }
+
+  fclose(f);
 }
 
 int new_pos(MAP *m, int x, int y,
