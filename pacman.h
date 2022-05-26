@@ -12,7 +12,7 @@
 #define EXPLODE 'b'
 
 void move(char command);
-int game_over();
+void check_game_over();
 int won();
 void ghosts();
 void explode();

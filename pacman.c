@@ -9,6 +9,7 @@ MAP m_food;
 POSITION pos;
 int has_bomb = 0;
 int remaining_food;
+int game_over = 0;
 
 void ghosts() {
   MAP m_copy;
@@ -32,10 +33,10 @@ void ghosts() {
   free_map(&m_copy);
 }
 
-int game_over() {
+void check_game_over() {
   POSITION pos;
   int is_alive = get_position(&m, &pos, HERO);
-  return !is_alive || won();
+  game_over = !is_alive || won();
 }
 
 int won() {
@@ -68,6 +69,11 @@ void move(char command) {
   }
 
   if (!valid_pos(&m, new_x, new_y, HERO)) {
+    return;
+  }
+
+  if (is_item(&m, new_x, new_y, GHOST)) {
+    game_over = 1;
     return;
   }
 
@@ -127,8 +133,13 @@ int main() {
     print_map(&m);
     printf("Bomb: %d\n", has_bomb);
     exec_commands();
-    ghosts();
-  } while (!game_over());
+
+    if (!game_over) {
+      ghosts();
+      check_game_over();
+    }
+
+  } while (!game_over);
 
   print_map(&m);
   free_map(&m);
