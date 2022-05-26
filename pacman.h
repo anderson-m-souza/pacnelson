@@ -11,4 +11,6 @@
 void move(char command);
 int game_over();
 void ghosts();
-void explode(int x, int y, int radius);
+void explode();
+void explode_helper(int x, int y,
+    int x_sum, int y_sum, int radius);

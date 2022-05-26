@@ -73,16 +73,26 @@ void move(char command) {
   pos.y = new_y;
 }
 
-void explode(int x, int y, int radius) {
-  int new_y = y + 1;
+void explode() {
+  int radius = 3;
+  explode_helper(pos.x, pos.y,  0,  1, radius);
+  explode_helper(pos.x, pos.y,  0, -1, radius);
+  explode_helper(pos.x, pos.y,  1,  0, radius);
+  explode_helper(pos.x, pos.y, -1,  0, radius);
+}
+
+void explode_helper(int x, int y,
+    int x_sum, int y_sum, int radius) {
+  int new_x = x + x_sum;
+  int new_y = y + y_sum;
 
   if (radius == 0
-      || is_wall(&m, x, new_y)) {
+      || is_wall(&m, new_x, new_y)) {
     return;
   }
 
-  m.matrix[x][new_y] = EMPTY;
-  explode(x, new_y, radius-1);
+  m.matrix[new_x][new_y] = EMPTY;
+  explode_helper(new_x, new_y, x_sum, y_sum, radius - 1);
 }
 
 int main() {
@@ -95,11 +105,11 @@ int main() {
 
     char command;
     scanf(" %c", &command);
-    move(command);
-
     if (has_bomb && command == EXPLODE) {
-      explode(pos.x, pos.y, 3);
+      explode();
       has_bomb = 0;
+    } else {
+      move(command);
     }
 
     ghosts();
