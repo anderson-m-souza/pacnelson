@@ -40,5 +40,6 @@ void change_pos(MAP *m, MAP *m_food, int x, int y,
 void copy_map(MAP *map_dest, MAP *map_orig);
 int new_pos(MAP *m, int x, int y,
     int *x_dest, int *y_dest);
+void count_food(MAP m, int *remaining_food);
 
 #endif

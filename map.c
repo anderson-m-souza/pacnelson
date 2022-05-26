@@ -127,3 +127,17 @@ int new_pos(MAP *m, int x, int y,
 
   return 0;
 }
+
+void count_food(MAP m, int *remaining_food) {
+  int food = 0;
+
+  for (int i = 0; i < m.rows; i++) {
+    for (int j = 0; j < m.cols; j++) {
+      if (m.matrix[i][j] == FOOD) {
+        food++;
+      }
+    }
+  }
+
+  *remaining_food = food;
+}

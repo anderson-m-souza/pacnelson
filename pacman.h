@@ -13,6 +13,7 @@
 
 void move(char command);
 int game_over();
+int won();
 void ghosts();
 void explode();
 void explode_helper(int x, int y,
