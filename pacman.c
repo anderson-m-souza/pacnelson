@@ -21,11 +21,12 @@ int new_pos(int x, int y,
   srand(time(0));
   for (int i = 0; i < 10; i++) {
     int random = rand() % 4;
+    int new_x = options[random][0];
+    int new_y = options[random][1];
     
-    if (valid_pos(&m, options[random][0], options[random][1])) {
-      *x_dest = options[random][0];
-      *y_dest = options[random][1];
-
+    if (valid_pos(&m, new_x, new_y, GHOST)) {
+      *x_dest = new_x;
+      *y_dest = new_y;
       return 1;
     }
   }
@@ -91,7 +92,7 @@ void move() {
       return;
   }
 
-  if (!valid_pos(&m, new_x, new_y))
+  if (!valid_pos(&m, new_x, new_y, HERO))
     return;
 
   change_pos(&m, pos.x, pos.y, new_x, new_y, HERO);
@@ -110,5 +111,6 @@ int main () {
     ghosts();
   } while (!game_over());
 
+  print_map(&m);
   free_map(&m);
 }
