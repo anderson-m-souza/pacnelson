@@ -29,10 +29,10 @@ int get_position(MAP *m, POSITION *pos, char item) {
 
 int valid_pos(MAP *m, char x, char y, char item) {
   return !is_wall(m, x, y)
-    && !is_same_item(m, x, y, item);
+    && !is_item(m, x, y, item);
 }
 
-int is_same_item(MAP *m, char x, char y, char item) {
+int is_item(MAP *m, char x, char y, char item) {
   return m->matrix[x][y] == item;
 }
 
