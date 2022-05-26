@@ -1,43 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
-#include <time.h>
 #include "pacman.h"
 #include "map.h"
 
 MAP m;
 POSITION pos;
-
-int new_pos(int x, int y,
-    int *x_dest, int *y_dest) {
-
-  int options[4][2] = {
-    { x, y+1 },
-    { x, y-1 },
-    { x+1, y },
-    { x-1, y }
-  };
-
-  srand(time(0));
-  for (int i = 0; i < 10; i++) {
-    int random = rand() % 4;
-    int new_x = options[random][0];
-    int new_y = options[random][1];
-    
-    if (valid_pos(&m, new_x, new_y, GHOST)) {
-      *x_dest = new_x;
-      *y_dest = new_y;
-      return 1;
-    }
-  }
-  
-  return 0;
-}
+int has_bomb = 0;
 
 void ghosts() {
   MAP m_copy;
-//  memset(&m_copy, 0, sizeof(MAP));
-//  memcpy(&m_copy, &m, sizeof(MAP));
 
   copy_map(&m_copy, &m);
 
@@ -46,7 +17,7 @@ void ghosts() {
 
       if (m_copy.matrix[i][j] == GHOST) {
         int x_dest, y_dest;
-        int can_move = new_pos(i, j, &x_dest, &y_dest);
+        int can_move = new_pos(&m, i, j, &x_dest, &y_dest);
 
         if (can_move) {
           change_pos(&m, i, j, x_dest, y_dest, GHOST);
@@ -64,14 +35,11 @@ int game_over() {
   return !is_alive;
 }
 
-void move() {
-  char direction;
-  scanf(" %c", &direction);
-
+void move(char command) {
   int new_x = pos.x;
   int new_y = pos.y;
 
-  switch (direction) {
+  switch (command) {
     case LEFT:
     case LEFT_VIM:
       new_y--;
@@ -92,22 +60,48 @@ void move() {
       return;
   }
 
-  if (!valid_pos(&m, new_x, new_y, HERO))
+  if (!valid_pos(&m, new_x, new_y, HERO)) {
     return;
+  }
+
+  if (is_item(&m, new_x, new_y, BOMB)) {
+    has_bomb = 1;
+  }
 
   change_pos(&m, pos.x, pos.y, new_x, new_y, HERO);
   pos.x = new_x;
   pos.y = new_y;
 }
 
+void explode(int x, int y, int radius) {
+  int new_y = y + 1;
 
-int main () {
+  if (radius == 0
+      || is_wall(&m, x, new_y)) {
+    return;
+  }
+
+  m.matrix[x][new_y] = EMPTY;
+  explode(x, new_y, radius-1);
+}
+
+int main() {
   read_map(&m);
   get_position(&m, &pos, HERO);
 
   do {
     print_map(&m);
-    move();
+    printf("has_bomb == %d\n", has_bomb);
+
+    char command;
+    scanf(" %c", &command);
+    move(command);
+
+    if (has_bomb && command == EXPLODE) {
+      explode(pos.x, pos.y, 3);
+      has_bomb = 0;
+    }
+
     ghosts();
   } while (!game_over());
 

@@ -6,7 +6,9 @@
 #define LEFT_VIM 'h'
 #define RIGHT 'd'
 #define RIGHT_VIM 'l'
+#define EXPLODE 'b'
 
-void move();
+void move(char command);
 int game_over();
 void ghosts();
+void explode(int x, int y, int radius);

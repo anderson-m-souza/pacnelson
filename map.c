@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "map.h"
 
 void copy_map(MAP *map_dest, MAP *map_orig) {
@@ -90,4 +91,30 @@ void print_map(MAP *m) {
   for (int i = 0; i < m->rows; i++) {
     printf("%s\n", m->matrix[i]);
   }
+}
+
+int new_pos(MAP *m, int x, int y,
+    int *x_dest, int *y_dest) {
+
+  int options[4][2] = {
+    { x, y+1 },
+    { x, y-1 },
+    { x+1, y },
+    { x-1, y }
+  };
+
+  srand(time(0));
+  for (int i = 0; i < 10; i++) {
+    int random = rand() % 4;
+    int new_x = options[random][0];
+    int new_y = options[random][1];
+
+    if (valid_pos(m, new_x, new_y, GHOST)) {
+      *x_dest = new_x;
+      *y_dest = new_y;
+      return 1;
+    }
+  }
+
+  return 0;
 }

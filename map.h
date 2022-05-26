@@ -4,6 +4,7 @@
 #define EMPTY '.'
 #define VERTICAL_WALL '|'
 #define HORIZONTAL_WALL '-'
+#define BOMB 'B'
 
 struct map {
   char** matrix;
@@ -33,5 +34,5 @@ int is_item(MAP *m, char x, char y, char item);
 void change_pos(MAP *m, int x, int y,
     int new_x, int new_y, char item);
 void copy_map(MAP *map_dest, MAP *map_orig);
-int new_pos(int x, int y,
+int new_pos(MAP *m, int x, int y,
     int *x_dest, int *y_dest);
