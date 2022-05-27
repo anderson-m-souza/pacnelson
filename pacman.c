@@ -131,7 +131,6 @@ int main() {
 
   do {
     print_map(&m);
-    printf("Bomb: %d\n", has_bomb);
     exec_commands();
 
     if (!game_over) {

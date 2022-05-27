@@ -39,7 +39,8 @@ int is_item(MAP *m, char x, char y, char item) {
 
 int is_wall(MAP *m, char x, char y) {
   return m->matrix[x][y] == VERTICAL_WALL
-      || m->matrix[x][y] == HORIZONTAL_WALL;
+      || m->matrix[x][y] == HORIZONTAL_WALL
+      || m->matrix[x][y] == CORNER_WALL;
 }
 
 int empty_pos(MAP *m, char x, char y) {
