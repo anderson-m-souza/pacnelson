@@ -4,6 +4,8 @@ An ncuses text mode game, inspired by Pac-Man, written in C. Made for educationa
 
 It was partly built during a course, and then I implemented some new features and solved some bugs.
 
+![img](./pacnelson.gif)
+
 ## Features implemented during the course:
 
 - Map translation from simple characters to ASCII art.
