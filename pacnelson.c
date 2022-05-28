@@ -159,6 +159,12 @@ int won()
   return remaining_food == 0;
 }
 
+void ncurses_update()
+{
+  refresh();
+  move(0, 0);
+}
+
 void ncurses_end()
 {
   refresh();
@@ -184,8 +190,7 @@ int main()
       check_game_over();
     }
 
-    refresh();
-    move(0, 0);
+    ncurses_update();
 
   } while (!game_over);
 

@@ -20,6 +20,7 @@ void move_hero(char command);
 void ghosts();
 void check_game_over();
 int won();
+void ncurses_update();
 void ncurses_end();
 
 #endif
